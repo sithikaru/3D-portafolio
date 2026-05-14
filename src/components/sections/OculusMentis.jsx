@@ -9,10 +9,10 @@ const OculusMentisSection = () => {
       {/* Background Parallax Typography */}
       <div className="absolute inset-0 flex flex-col justify-center pointer-events-none opacity-5 z-0">
         <ParallaxText baseVelocity={2} className="text-[150px] font-serif font-bold text-ink mb-10">
-          THESIS ANTITHESIS SYNTHESIS
+          ZIJJA ZIJJA ZIJJA ZIJJA
         </ParallaxText>
         <ParallaxText baseVelocity={-2} className="text-[150px] font-serif font-bold text-ink">
-          MARXIST DIALECTICS
+          ZIJJA ZIJJA ZIJJA ZIJJA
         </ParallaxText>
       </div>
 

@@ -1,30 +1,79 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { FadeInWhenVisible } from '../ui/ScrollAnimations';
 import MagneticButton from '../ui/MagneticButton';
 import { Code2, Database, Layout } from 'lucide-react';
 
-const ProjectCard = ({ title, desc, icon: Icon, delay }) => (
-  <FadeInWhenVisible delay={delay} className="border border-ink/10 p-6 md:p-8 bg-paper-light hover:border-accent/30 transition-colors group relative overflow-hidden">
-    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-      <Icon size={120} strokeWidth={1} />
-    </div>
-    <div className="relative z-10">
-      <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center mb-6 group-hover:border-accent group-hover:text-accent transition-colors">
-        <Icon size={20} />
-      </div>
-      <h3 className="text-2xl font-serif mb-3 text-ink">{title}</h3>
-      <p className="text-ink-dark font-light text-sm md:text-base leading-relaxed">
-        {desc}
-      </p>
-      <div className="mt-8">
-        <MagneticButton className="!text-xs !py-2 !px-6 border-ink/30 text-ink-dark group-hover:text-ink">
-          View Details
-        </MagneticButton>
-      </div>
-    </div>
-  </FadeInWhenVisible>
-);
+const ProjectCard = ({ title, desc, icon: Icon, delay }) => {
+  const ref = useRef(null);
+
+  // 3D Tilt logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7.5deg", "-7.5deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7.5deg", "7.5deg"]);
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+
+    const rect = ref.current.getBoundingClientRect();
+
+    const width = rect.width;
+    const height = rect.height;
+
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <FadeInWhenVisible delay={delay}>
+      <motion.div
+        ref={ref}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d"
+        }}
+        className="border border-ink/10 p-6 md:p-8 bg-paper-light hover:border-accent/30 transition-colors group relative overflow-hidden interactive"
+      >
+        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity" style={{ transform: "translateZ(30px)" }}>
+          <Icon size={120} strokeWidth={1} />
+        </div>
+        <div className="relative z-10" style={{ transform: "translateZ(50px)" }}>
+          <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center mb-6 group-hover:border-accent group-hover:text-accent transition-colors">
+            <Icon size={20} />
+          </div>
+          <h3 className="text-2xl font-serif mb-3 text-ink">{title}</h3>
+          <p className="text-ink-dark font-light text-sm md:text-base leading-relaxed">
+            {desc}
+          </p>
+          <div className="mt-8">
+            <MagneticButton className="!text-xs !py-2 !px-6 border-ink/30 text-ink-dark group-hover:text-ink">
+              View Details
+            </MagneticButton>
+          </div>
+        </div>
+      </motion.div>
+    </FadeInWhenVisible>
+  );
+};
 
 const ArchitectSection = () => {
   return (

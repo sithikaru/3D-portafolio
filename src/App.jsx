@@ -8,7 +8,8 @@ import GenesisSection from './components/sections/Genesis';
 import ArchitectSection from './components/sections/Architect';
 import AIAlchemistSection from './components/sections/AIAlchemist';
 import OculusMentisSection from './components/sections/OculusMentis';
-import PlayerPersonSection from './components/sections/PlayerPerson';
+import TheSetupSection from './components/sections/TheSetup';
+import InteractiveFooter from './components/ui/InteractiveFooter';
 
 const App = () => {
   return (
@@ -22,13 +23,10 @@ const App = () => {
             <GenesisSection />
             <ArchitectSection />
             <AIAlchemistSection />
+            <TheSetupSection />
             <OculusMentisSection />
-            <PlayerPersonSection />
 
-            <footer className="py-8 text-center border-t border-ink/10 font-mono text-xs text-ink/40 tracking-widest uppercase">
-              <p>Designed by AI. Architected by Sithija.</p>
-              <p className="mt-2 text-accent/50">Oculus Mentis</p>
-            </footer>
+            <InteractiveFooter />
           </main>
 
         </div>
